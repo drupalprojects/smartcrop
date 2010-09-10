@@ -33,42 +33,59 @@ function imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested
   $dx = imagesx($image) - min(imagesx($image), $requested_x);
   $dy = imagesy($image) - min(imagesy($image), $requested_y);
   $left = $top = 0;
+  $left_entropy = $right_entropy = $top_entropy = $bottom_entropy = 0;
   $right = imagesx($image);
   $bottom = imagesy($image);
+
+  // Slice from left and right edges until the correct width is reached.
   while ($dx) {
     $slice = min($dx, 10);
-    $left_slice = imageapi_gd_create_tmp($image_data, $slice, imagesy($image));
-    imagecopy($left_slice, $image, 0, 0, $left, $top, $slice, imagesy($image));
-    $right_slice = imageapi_gd_create_tmp($image_data, $slice, imagesy($image));
-    imagecopy($right_slice, $image, 0, 0, $right - $slice, $top, $slice, imagesy($image));
-    if (_smartcrop_gd_entropy($left_slice) >= _smartcrop_gd_entropy($right_slice)) {
+
+    // Calculate the entropy of the new slice.
+    if (!$left_entropy) {
+      $left_entropy = _smartcrop_gd_entropy_slice($image_data, $left, $top, $slice, imagesy($image));
+    }
+    if (!$right_entropy) {
+      $right_entropy = _smartcrop_gd_entropy_slice($image_data, $right - $slice, $top, $slice, imagesy($image));
+    }
+
+    // Remove the lowest entropy slice.
+    if ($left_entropy >= $right_entropy) {
       $right -= $slice;
+      $right_entropy = 0;
     }
     else {
       $left += $slice;
+      $left_entropy = 0;
     }
     $dx -= $slice;
-    imagedestroy($left_slice);
-    imagedestroy($right_slice);
   }
 
+  // Slice from the top and bottom edges until the correct width is reached.
   while ($dy) {
     $slice = min($dy, 10);
-    $top_slice = imageapi_gd_create_tmp($image_data, $requested_x, $slice);
-    imagecopy($top_slice, $image, 0, 0, $left, $top, $requested_x, $slice);
-    $bottom_slice = imageapi_gd_create_tmp($image_data, $requested_x, $slice);
-    imagecopy($bottom_slice, $image, 0, 0, $left, $bottom - $slice, $requested_x, $slice);
-    if (_smartcrop_gd_entropy($top_slice) >= _smartcrop_gd_entropy($bottom_slice)) {
+
+    // Calculate the entropy of the new slice.
+    if (!$top_entropy) {
+      $top_entropy = _smartcrop_gd_entropy_slice($image_data, $left, $top, $requested_x, $slice);
+    }
+    if (!$bottom_entropy) {
+      $bottom_entropy = _smartcrop_gd_entropy_slice($image_data, $left, $bottom - $slice, $requested_x, $slice);
+    }
+
+    // Remove the lowest entropy slice.
+    if ($top_entropy >= $bottom_entropy) {
       $bottom -= $slice;
+      $bottom_entropy = 0;
     }
     else {
       $top += $slice;
+      $top_entropy = 0;
     }
     $dy -= $slice;
-    imagedestroy($top_slice);
-    imagedestroy($bottom_slice);
   }
 
+  // Finally, crop the image using the coordinates found above.
   $cropped_image = imageapi_gd_create_tmp($image_data, $right - $left, $bottom - $top);
   imagecopy($cropped_image, $image, 0, 0, $left, $top, $right - $left, $bottom - $top);
   imagedestroy($image_data->resource);
@@ -76,6 +93,24 @@ function imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested
   $image_data->info['width'] = $requested_x;
   $image_data->info['height'] = $requested_y;
   return TRUE;
+}
+
+/**
+ * Compute the entropy of an image slice.
+ *
+ * @param $image_data An image object
+ * @param $x Starting X coordinate.
+ * @param $y Starting Y coordinate.
+ * @param $width The width of the slice.
+ * @param $height The height of the slice.
+ * @return
+ */
+function _smartcrop_gd_entropy_slice($image_data, $x, $y, $width, $height) {
+  $slice = imageapi_gd_create_tmp($image_data, $width, $height);
+  imagecopy($slice, $image_data->resource, 0, 0, $x, $y, $width, $height);
+  $entropy = _smartcrop_gd_entropy($slice);
+  imagedestroy($slice);
+  return $entropy;
 }
 
 /**

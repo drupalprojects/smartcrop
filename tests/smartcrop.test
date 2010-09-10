@@ -97,9 +97,9 @@ class SmartcropTestCase extends DrupalWebTestCase {
     $this->drupalGet(file_create_url('imagecache/test/' . $file));
     $this->assertResponse(200, t('Retrieved cropped image.'));
 
-    $image = imagecreatefrompng(file_create_url('imagecache/test/' . $file));
-    $this->assertEqual(100, imagesx($image), t('Image was upscaled correctly.'));
-    $this->assertEqual(100, imagesy($image), t('Image was upscaled correctly.'));
+    $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center_10X.png');
+    $actual_image = imagecreatefrompng(file_create_url('imagecache/test/' . $file));
+    $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
 
     // Test percentage units.
     $this->drupalGet('admin/build/imagecache');
@@ -120,9 +120,9 @@ class SmartcropTestCase extends DrupalWebTestCase {
     $this->drupalGet(file_create_url('imagecache/test/center_0.png'));
     $this->assertResponse(200, t('Retrieved cropped image.'));
 
-    $image = imagecreatefrompng(file_create_url('imagecache/test/center_0.png'));
-    $this->assertEqual(20, imagesx($image), t('Image was upscaled correctly.'));
-    $this->assertEqual(20, imagesy($image), t('Image was upscaled correctly.'));
+    $expected_image = imagecreatefrompng(file_create_url('imagecache/test/center_0.png'));
+    $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center_2X.png');
+    $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
   }
 
   /**

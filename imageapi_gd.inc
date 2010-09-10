@@ -4,6 +4,10 @@
 /**
  * @file
  * libgd implementation of smartcrop action.
+ *
+ * Cropping algorithm is derived from http://code.google.com/p/sorl-thumbnail/
+ * by Mikko Hellsing, Chris Beaven.
+ * Adapted to ImageCache and GD by Dylan Tack (grendzy).
  */
 
 /**

@@ -20,7 +20,7 @@ class SmartcropTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('smartcrop', 'imagecache', 'imagecache_ui', 'imageapi', 'imageapi_gd', 'upload');
 
-    // This is required because otherwise imagecache_menu() is called before $conf['file_directory_path'] is set.
+    // Menu router must be rebuilt because imagecache_menu() is called before $conf['file_directory_path'] is set.
     menu_router_build(TRUE);
 
     // Create and login user

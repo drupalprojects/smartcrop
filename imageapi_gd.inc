@@ -35,7 +35,7 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y, $
     imagecopy($left_slice, $image, 0, 0, $left, $top, $slice, imagesy($image));
     $right_slice = imageapi_gd_create_tmp($image_data, $slice, imagesy($image));
     imagecopy($right_slice, $image, 0, 0, $right - $slice, $top, $slice, imagesy($image));
-    if (_smartcrop_entropy($left_slice) >= _smartcrop_entropy($right_slice)) {
+    if (_smartcrop_gd_entropy($left_slice) >= _smartcrop_gd_entropy($right_slice)) {
       $right -= $slice;
     }
     else {
@@ -52,7 +52,7 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y, $
     imagecopy($top_slice, $image, 0, 0, $left, $top, $requested_x, $slice);
     $bottom_slice = imageapi_gd_create_tmp($image_data, $requested_x, $slice);
     imagecopy($bottom_slice, $image, 0, 0, $left, $bottom - $slice, $requested_x, $slice);
-    if (_smartcrop_entropy($top_slice) >= _smartcrop_entropy($bottom_slice)) {
+    if (_smartcrop_gd_entropy($top_slice) >= _smartcrop_gd_entropy($bottom_slice)) {
       $bottom -= $slice;
     }
     else {
@@ -77,8 +77,8 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y, $
  * @param resource $img GD image resource.
  * @return float The entropy of the image.
  */
-function _smartcrop_entropy($img) {
-  $histogram = _smartcrop_histogram($img);
+function _smartcrop_gd_entropy($img) {
+  $histogram = _smartcrop_gd_histogram($img);
   $histogram_size = array_sum($histogram);
   $entropy = 0;
   foreach ($histogram as $p) {
@@ -96,7 +96,7 @@ function _smartcrop_entropy($img) {
  * @param resource $img GD image resource.
  * @return array histogram as an array.
  */
-function _smartcrop_histogram($img) {
+function _smartcrop_gd_histogram($img) {
   $histogram = array_fill(0, 768, 0);
   for ($i = 0; $i < imagesx($img); $i++) {
     for ($j = 0; $j < imagesy($img); $j++) {

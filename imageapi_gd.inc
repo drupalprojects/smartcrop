@@ -18,8 +18,8 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
   imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height']);
   $image = $image_data->resource;
-  $dx = (imagesx($image) - min(imagesx($image), $requested_x));
-  $dy = (imagesy($image) - min(imagesy($image), $requested_y));
+  $dx = imagesx($image) - min(imagesx($image), $requested_x);
+  $dy = imagesy($image) - min(imagesy($image), $requested_y);
   $left = $top = 0;
   $right = imagesx($image);
   $bottom = imagesy($image);

@@ -14,9 +14,11 @@
  * @param int $requested_y
  * @return booleon TRUE if successful
  */
-function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y) {
+function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y, $upscale) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
-  imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height']);
+  if ($ratio <= 1 || $upscale) {
+    imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height']);
+  }
   $image = $image_data->resource;
   $dx = imagesx($image) - min(imagesx($image), $requested_x);
   $dy = imagesy($image) - min(imagesy($image), $requested_y);
@@ -57,8 +59,8 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y) {
     imagedestroy($bottom_slice);
   }
 
-  $cropped_image = imageapi_gd_create_tmp($image_data, $requested_x, $requested_y);
-  imagecopy($cropped_image, $image, 0, 0, $left, $top, $requested_x, $requested_y);
+  $cropped_image = imageapi_gd_create_tmp($image_data, $right - $left, $bottom - $top);
+  imagecopy($cropped_image, $image, 0, 0, $left, $top, $right - $left, $bottom - $top);
   imagedestroy($image_data->resource);
   $image_data->resource = $cropped_image;
   $image_data->info['width'] = $requested_x;

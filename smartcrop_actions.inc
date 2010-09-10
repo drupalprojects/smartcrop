@@ -11,7 +11,7 @@
  */
 function smartcrop_scale_and_crop_form($data = array()) {
   module_load_include('inc', 'imagecache', 'imagecache_actions');
-  return imagecache_resize_form($data);
+  return imagecache_scale_form($data);
 }
 
 /**
@@ -19,7 +19,7 @@ function smartcrop_scale_and_crop_form($data = array()) {
  */
 function theme_smartcrop_scale_and_crop($element) {
   module_load_include('inc', 'imagecache', 'imagecache_actions');
-  return theme_imagecache_resize($element);
+  return theme_imagecache_scale($element);
 }
 
 /**

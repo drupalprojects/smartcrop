@@ -56,6 +56,10 @@ class SmartcropTestCase extends DrupalWebTestCase {
     $this->assertImageNotEqual($image1, $image2);
     $image2 = $expected_image = imagecreatefrompng(dirname(__FILE__) . '/left.png');
     $this->assertImageEqual($image1, $image2);
+
+    // Clean up.
+    imagedestroy($image1);
+    imagedestroy($image2);
   }
 
   /**
@@ -134,6 +138,10 @@ class SmartcropTestCase extends DrupalWebTestCase {
     $expected_image = imagecreatefrompng(file_create_url('imagecache/test/center_0.png'));
     $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center_2X.png');
     $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
+
+    // Clean up.
+    imagedestroy($expected_image);
+    imagedestroy($actual_image);
   }
 
   /**
@@ -147,8 +155,10 @@ class SmartcropTestCase extends DrupalWebTestCase {
     if (empty($message)) {
       $message = t('Images are equal.');
     }
-    $mean = $this->mean($this->difference($image2, $image2));
+    $difference = $this->difference($image2, $image2);
+    $mean = $this->mean($difference);
     $this->assertTrue($mean < $max_diff, $message);
+    imagedestroy($difference);
   }
 
   /**

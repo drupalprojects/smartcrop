@@ -20,3 +20,20 @@ function smartcrop_imagecache_actions() {
   );
   return $actions;
 }
+
+/**
+ * Implementation of hook_theme().
+ */
+function smartcrop_theme() {
+  $theme = array(
+    'smartcrop_scale_and_crop' => array(
+      'file' => 'smartcrop_actions.inc',
+      'arguments' => array('element' => NULL),
+    ),
+    'smartcrop_crop' => array(
+      'file' => 'smartcrop_actions.inc',
+      'arguments' => array('element' => NULL),
+    ),
+  );
+  return $theme;
+}

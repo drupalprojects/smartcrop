@@ -51,8 +51,6 @@ class SmartcropTestCase extends DrupalWebTestCase {
         'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
       );
       $this->drupalPost('node/add/page', $edit, t('Save'));
-      $this->drupalGet(file_create_url($file));
-      $this->assertResponse(200, t('Retrieved original image.'));
       $this->drupalGet(file_create_url('imagecache/test/' . $file));
       $this->assertResponse(200, t('Retrieved cropped image.'));
       $image_hash = $this->imageHash(file_create_url('imagecache/test/' . $file));

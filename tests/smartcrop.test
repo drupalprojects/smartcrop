@@ -155,7 +155,7 @@ class SmartcropTestCase extends DrupalWebTestCase {
     if (empty($message)) {
       $message = t('Images are equal.');
     }
-    $difference = $this->difference($image2, $image2);
+    $difference = $this->difference($image1, $image2);
     $mean = $this->mean($difference);
     $this->assertTrue($mean < $max_diff, $message);
     imagedestroy($difference);
@@ -172,7 +172,8 @@ class SmartcropTestCase extends DrupalWebTestCase {
     if (empty($message)) {
       $message = t('Images are not equal.');
     }
-    $mean = $this->mean($this->difference($image1, $image2));
+    $difference = $this->difference($image1, $image2);
+    $mean = $this->mean($difference);
     $this->assertTrue($mean > $min_diff, $message);
   }
 

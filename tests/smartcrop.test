@@ -65,7 +65,7 @@ class SmartcropTestCase extends DrupalWebTestCase {
   /**
    * Test cropping of images with known properties.
    */
-  function testCrop() {
+  function testScaleAndCrop() {
     // Create a preset with entropy crop.
     $this->drupalPost('admin/build/imagecache/add', array('presetname' => 'test'), t('Save Preset'));
     $this->clickLink(t('Add !action', array('!action' => 'Scale and Smart Crop')));
@@ -138,6 +138,33 @@ class SmartcropTestCase extends DrupalWebTestCase {
     $expected_image = imagecreatefrompng(file_create_url('imagecache/test/center_0.png'));
     $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center_2X.png');
     $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
+
+    // Clean up.
+    imagedestroy($expected_image);
+    imagedestroy($actual_image);
+  }
+
+  function testCrop() {
+    // Create a preset with entropy crop.
+    $this->drupalPost('admin/build/imagecache/add', array('presetname' => 'test2'), t('Save Preset'));
+    $this->clickLink(t('Add !action', array('!action' => 'Smart Crop')));
+    $edit = array(
+      'data[width]' => '25%',
+      'data[height]' => '25%',
+    );
+    $this->drupalPost(NULL, $edit, t('Create Action'));
+    $file = 'quarter.png';
+    $edit = array(
+      'title' => $this->randomName(),
+      'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
+    );
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalGet(file_create_url('imagecache/test2/quarter.png'));
+    $this->assertResponse(200, t('Retrieved cropped image.'));
+
+    $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center.png');
+    $actual_image = imagecreatefrompng(file_create_url('imagecache/test2/' . $file));
+    $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was cropped correctly.', array('@file' => $file)));
 
     // Clean up.
     imagedestroy($expected_image);

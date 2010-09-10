@@ -10,6 +10,14 @@
  * Adapted to ImageCache and GD by Dylan Tack (grendzy).
  */
 
+function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
+  $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
+  if ($ratio <= 1 || $upscale) {
+    imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height']);
+  }
+  return imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested_y);
+}
+
 /**
  * Crop an image, removing the lowest entropy areas.
  *
@@ -18,11 +26,7 @@
  * @param int $requested_y
  * @return booleon TRUE if successful
  */
-function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
-  $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
-  if ($ratio <= 1 || $upscale) {
-    imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height']);
-  }
+function imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested_y) {
   $image = $image_data->resource;
   $dx = imagesx($image) - min(imagesx($image), $requested_x);
   $dy = imagesy($image) - min(imagesy($image), $requested_y);

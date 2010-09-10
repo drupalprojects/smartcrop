@@ -138,9 +138,9 @@ class SmartcropTestCase extends DrupalWebTestCase {
 
   /**
    * Assert that two images are the same, with some difference allowed to account for e.g. compression artifacts.
-   * @param $image1 A GD image resource
-   * @param $image2 A GD image resource
-   * @param $max_diff (optional) The maximum allowed difference, range from 0 to 255
+   * @param $image1 A GD image resource.
+   * @param $image2 A GD image resource.
+   * @param $max_diff (optional) The maximum allowed difference, range from 0 to 255, defaults to 1.
    * @param $message (optional) The message to display along with the assertion.
    */
   function assertImageEqual($image1, $image2, $max_diff = 1, $message = NULL) {
@@ -153,9 +153,9 @@ class SmartcropTestCase extends DrupalWebTestCase {
 
   /**
    * Assert that two images are not the same, with some difference allowed to account for e.g. compression artifacts.
-   * @param $image1 A GD image resource
-   * @param $image2 A GD image resource
-   * @param $max_diff (optional) The maximum allowed difference, range from 0 to 255
+   * @param $image1 A GD image resource.
+   * @param $image2 A GD image resource.
+   * @param $min_diff (optional) The minimum allowed difference, range from 0 to 255, defaults to 1.
    * @param $message (optional) The message to display along with the assertion.
    */
   function assertImageNotEqual($image1, $image2, $min_diff = 1, $message = NULL) {
@@ -166,6 +166,11 @@ class SmartcropTestCase extends DrupalWebTestCase {
     $this->assertTrue($mean > $min_diff, $message);
   }
 
+  /**
+   * Calculate the mean pixel intensity.
+   * @param $image GD image resource.
+   * @return The mean.
+   */
   function mean($image) {
     $mean = 0;
     $size = imagesx($image) * imagesy($image) * 3;
@@ -185,9 +190,9 @@ class SmartcropTestCase extends DrupalWebTestCase {
 
   /**
    * Calculate the difference of 2 images.
-   * @param $image1
-   * @param $image2
-   * @return subtracted image
+   * @param $image1 A GD image resource.
+   * @param $image2 A GD image resource.
+   * @return A GD image resource, with the subtracted image.
    */
   function difference($image1, $image2) {
     $this->assertEqual(imagesx($image1), imagesx($image2), t('Images have the same width.'));

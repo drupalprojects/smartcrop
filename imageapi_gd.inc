@@ -18,7 +18,7 @@
  * @param int $requested_y
  * @return booleon TRUE if successful
  */
-function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y, $upscale) {
+function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
   if ($ratio <= 1 || $upscale) {
     imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height']);

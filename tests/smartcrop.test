@@ -34,7 +34,7 @@ class SmartcropTestCase extends DrupalWebTestCase {
   function testCrop() {
     // Create a preset with entropy crop.
     $this->drupalPost('admin/build/imagecache/add', array('presetname' => 'test'), t('Save Preset'));
-    $this->clickLink(t('Add !action', array('!action' => 'Scale and Etropy Crop')));
+    $this->clickLink(t('Add !action', array('!action' => 'Smart Crop')));
     $edit = array(
       'data[width]' => 10,
       'data[height]' => 10,

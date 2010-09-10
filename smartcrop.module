@@ -9,8 +9,8 @@ require_once('imageapi_gd.inc');
 function smartcrop_imagecache_actions() {
   $actions = array(
     'smartcrop_scale_and_crop' => array(
-      'name' => 'Scale and Etropy Crop',
-      'description' => 'Resize an image while maintaining aspect ratio, then crop it to the specified dimensions.',
+      'name' => 'Smart Crop',
+      'description' => 'Resize an image while maintaining aspect ratio, then crop based entropy.',
       'file' => 'smartcrop_actions.inc',
     ),
   );

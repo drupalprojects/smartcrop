@@ -27,9 +27,9 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y) {
   $bottom = imagesy($image);
   while ($dx) {
     $slice = min($dx, 10);
-    $left_slice = imagecreatetruecolor($slice, imagesy($image));
+    $left_slice = imageapi_gd_create_tmp($image_data, $slice, imagesy($image));
     imagecopy($left_slice, $image, 0, 0, $left, $top, $slice, imagesy($image));
-    $right_slice = imagecreatetruecolor($slice, imagesy($image));
+    $right_slice = imageapi_gd_create_tmp($image_data, $slice, imagesy($image));
     imagecopy($right_slice, $image, 0, 0, $right - $slice, $top, $slice, imagesy($image));
     if (_smartcrop_entropy($left_slice) >= _smartcrop_entropy($right_slice)) {
       $right -= $slice;
@@ -44,9 +44,9 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y) {
 
   while ($dy) {
     $slice = min($dy, 10);
-    $top_slice = imagecreatetruecolor($requested_x, $slice);
+    $top_slice = imageapi_gd_create_tmp($image_data, $requested_x, $slice);
     imagecopy($top_slice, $image, 0, 0, $left, $top, $requested_x, $slice);
-    $bottom_slice = imagecreatetruecolor($requested_x, $slice);
+    $bottom_slice = imageapi_gd_create_tmp($image_data, $requested_x, $slice);
     imagecopy($bottom_slice, $image, 0, 0, $left, $bottom - $slice, $requested_x, $slice);
     if (_smartcrop_entropy($top_slice) >= _smartcrop_entropy($bottom_slice)) {
       $bottom -= $slice;
@@ -59,7 +59,7 @@ function imageapi_gd_image_smartcrop(&$image_data, $requested_x, $requested_y) {
     imagedestroy($bottom_slice);
   }
 
-  $cropped_image = imagecreatetruecolor($requested_x, $requested_y);
+  $cropped_image = imageapi_gd_create_tmp($image_data, $requested_x, $requested_y);
   imagecopy($cropped_image, $image, 0, 0, $left, $top, $requested_x, $requested_y);
   imagedestroy($image_data->resource);
   $image_data->resource = $cropped_image;

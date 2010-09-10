@@ -9,8 +9,6 @@
 /**
  * Crop an image, removing the lowest entropy areas.
  *
- * @FIXME - doesn't handle alpha transparency correctly
- *
  * @param array $image_data
  * @param int $requested_x
  * @param int $requested_y

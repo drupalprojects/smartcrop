@@ -79,6 +79,11 @@ class SmartcropTestCase extends DrupalWebTestCase {
       );
     }
 
+    $this->assertImageEqual(
+      imagecreatefrompng(dirname(__FILE__) . '/center.png'),
+      imagecreatefrompng(dirname(__FILE__) . '/center.png')
+    );
+
     // Test Upscaling.
     $this->drupalGet('admin/build/imagecache');
     $this->clickLink('test');
@@ -142,5 +147,70 @@ class SmartcropTestCase extends DrupalWebTestCase {
     }
     imagedestroy($image);
     return hash('sha256', $data);
+  }
+
+  /**
+   * Asset that two images are the same, with some differnece allowed to account for e.g. compression artifacts.
+   * @param $image1 A GD image resource
+   * @param $image2 A GD image resource
+   * @param $max_diff (optional) The maximum allowed difference, range from 0 to 255
+   * @param $message (optional) The message to display along with the assertion.
+   */
+  function assertImageEqual($image1, $image2, $max_diff = 1, $message = NULL) {
+    if (empty($message)) {
+      $message = t('Images are equal');
+    }
+    $average = $this->average($this->difference($image2, $image2));
+    $this->assertTrue($average < $max_diff, $message);
+  }
+
+  function average($image) {
+    $average = 0;
+    $size = imagesx($image) * imagesy($image) * 3;
+    for ($i = 0; $i < imagesx($image); $i++) {
+      for ($j = 0; $j < imagesy($image); $j++) {
+        $rgb = imagecolorat($image, $i, $j);
+        $r = ($rgb >> 16) & 0xFF;
+        $g = ($rgb >> 8) & 0xFF;
+        $b = $rgb & 0xFF;
+        $average += $r / $size;
+        $average += $g / $size;
+        $average += $b / $size;
+      }
+    }
+    return $average;
+  }
+
+  /**
+   * Calculate the difference of 2 images.
+   * @param $image1
+   * @param $image2
+   * @return subtracted image
+   */
+  function difference($image1, $image2) {
+    $this->assertEqual(imagesx($image1), imagesx($image2), t('Images have the same width.'));
+    $this->assertEqual(imagesy($image1), imagesy($image2), t('Images have the same height.'));
+    $difference = imagecreatetruecolor(imagesx($image1), imagesy($image1));
+    for ($i = 0; $i < imagesx($image1); $i++) {
+      for ($j = 0; $j < imagesy($image1); $j++) {
+        $rgb1 = imagecolorat($image1, $i, $j);
+        $r1 = ($rgb1 >> 16) & 0xFF;
+        $g1 = ($rgb1 >> 8) & 0xFF;
+        $b1 = $rgb1 & 0xFF;
+
+        $rgb2 = imagecolorat($image1, $i, $j);
+        $r2 = ($rgb2 >> 16) & 0xFF;
+        $g2 = ($rgb2 >> 8) & 0xFF;
+        $b2 = $rgb2 & 0xFF;
+
+        imagesetpixel($difference, $i, $j, imagecolorallocate(
+          $difference,
+          abs($r2 - $r1),
+          abs($g2 - $g1),
+          abs($b2 - $b1)
+        ));
+      }
+    }
+    return $difference;
   }
 }

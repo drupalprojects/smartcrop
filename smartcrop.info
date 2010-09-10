@@ -1,0 +1,7 @@
+; // $Id$
+name = SmartCrop
+description = Crops low-entropy parts of the image.
+core = 6.x
+dependencies[] = imagecache
+dependencies[] = imageapi_gd
+package = ImageCache

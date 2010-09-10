@@ -1,0 +1,21 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install file for smartcrop module
+ */
+
+/*
+ * Implementation of hook_enable().
+ */
+function smartcrop_enable() {
+  cache_clear_all('imagecache_actions', 'cache');
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function smartcrop_disable() {
+  cache_clear_all('imagecache_actions', 'cache');
+}

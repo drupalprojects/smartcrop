@@ -1,0 +1,78 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Tests for the fivestar_quota module.
+ */
+
+class SmartcropTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Smartcrop test'),
+      'description' => t('Test Smartcrop.'),
+      'group' => t('Imagecache'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('smartcrop', 'imagecache', 'imagecache_ui', 'imageapi', 'imageapi_gd', 'upload');
+
+    // Create and login user
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer imagecache', 'administer nodes', 'upload files', 'view uploaded files'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test cropping of images with known properties.
+   */
+  function testCrop() {
+    // Create a preset with entropy crop.
+    $this->drupalPost('admin/build/imagecache/add', array('presetname' => 'test'), t('Save Preset'));
+    $this->clickLink(t('Add !action', array('!action' => 'Scale and Etropy Crop')));
+    $edit = array(
+      'data[width]' => 100,
+      'data[height]' => 100,
+    );
+    $this->drupalPost(NULL, $edit, t('Create Action'));
+
+    menu_router_build(TRUE); // This is required because otherwise imagecache_menu() is called before $conf['file_directory_path'] is set.
+    $test_files = array('bottom.png', 'left.png', 'right.png', 'top.png');
+    $result_hash = $this->imageHash(dirname(__FILE__) . '/result.png');
+    foreach ($test_files as $file) {
+      // Upload a file
+      $edit = array(
+        'title' => $this->randomName(),
+        'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
+      );
+      $this->drupalPost('node/add/page', $edit, t('Save'));
+      $this->drupalGet(file_create_url($file));
+      $this->assertResponse(200, t('Retrieved original image.'));
+      $this->drupalGet(file_create_url('imagecache/test/' . $file));
+      $this->assertResponse(200, t('Retrieved cropped image.'));
+      $this->assertEqual($result_hash,
+        $this->imageHash(file_create_url('imagecache/test/' . $file)),
+        t('@file was cropped correctly.', array('@file' => $file))
+      );
+    }
+  }
+
+  /**
+   * Compute a hash of image data.
+   * @param $image_file Path to an image file.
+   * @return string hash of image data.
+   */
+  function imageHash($image_file) {
+    $image = imagecreatefrompng($image_file);
+    $data = '';
+    for ($i = 0; $i < imagesx($image); $i++) {
+      for ($j = 0; $j < imagesy($image); $j++) {
+        $data .= imagecolorat($image, $i, $j);
+      }
+    }
+    imagedestroy($image);
+    return hash('sha256', $data);
+  }
+}

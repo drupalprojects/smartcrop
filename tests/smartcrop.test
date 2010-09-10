@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests for the fivestar_quota module.
+ * Tests for the smartcrop module.
  */
 
 class SmartcropTestCase extends DrupalWebTestCase {

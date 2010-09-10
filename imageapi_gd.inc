@@ -10,6 +10,15 @@
  * Adapted to ImageCache and GD by Dylan Tack (grendzy).
  */
 
+/**
+ * Scale and crop an image to the specified size using GD.
+ *
+ * @param $image_data An image object.
+ * @param $requested_x The requested image width.
+ * @param $requested_y The requested image height.
+ * @param $upscale TRUE if upscaling is allowed.
+ * @return TRUE if successful.
+ */
 function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
   if ($ratio <= 1 || $upscale) {

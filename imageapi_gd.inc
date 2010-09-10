@@ -17,7 +17,7 @@ function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requeste
       return FALSE;
     }
   }
-  return imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested_y);
+  return imageapi_gd_image_smartcrop_crop($image_data, $requested_x, $requested_y);
 }
 
 /**

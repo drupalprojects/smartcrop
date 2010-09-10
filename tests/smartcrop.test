@@ -48,6 +48,17 @@ class SmartcropTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test the ImageEqual assertions.
+   */
+  function testImageEqual() {
+    $image1 = $expected_image = imagecreatefrompng(dirname(__FILE__) . '/left.png');
+    $image2 = $expected_image = imagecreatefrompng(dirname(__FILE__) . '/right.png');
+    $this->assertImageNotEqual($image1, $image2);
+    $image2 = $expected_image = imagecreatefrompng(dirname(__FILE__) . '/left.png');
+    $this->assertImageEqual($image1, $image2);
+  }
+
+  /**
    * Test cropping of images with known properties.
    */
   function testCrop() {
@@ -126,7 +137,7 @@ class SmartcropTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Asset that two images are the same, with some differnece allowed to account for e.g. compression artifacts.
+   * Assert that two images are the same, with some difference allowed to account for e.g. compression artifacts.
    * @param $image1 A GD image resource
    * @param $image2 A GD image resource
    * @param $max_diff (optional) The maximum allowed difference, range from 0 to 255
@@ -134,10 +145,25 @@ class SmartcropTestCase extends DrupalWebTestCase {
    */
   function assertImageEqual($image1, $image2, $max_diff = 1, $message = NULL) {
     if (empty($message)) {
-      $message = t('Images are equal');
+      $message = t('Images are equal.');
     }
     $average = $this->average($this->difference($image2, $image2));
     $this->assertTrue($average < $max_diff, $message);
+  }
+
+  /**
+   * Assert that two images are not the same, with some difference allowed to account for e.g. compression artifacts.
+   * @param $image1 A GD image resource
+   * @param $image2 A GD image resource
+   * @param $max_diff (optional) The maximum allowed difference, range from 0 to 255
+   * @param $message (optional) The message to display along with the assertion.
+   */
+  function assertImageNotEqual($image1, $image2, $min_diff = 1, $message = NULL) {
+    if (empty($message)) {
+      $message = t('Images are not equal.');
+    }
+    $average = $this->average($this->difference($image2, $image2));
+    $this->assertTrue($average > $min_diff, $message);
   }
 
   function average($image) {

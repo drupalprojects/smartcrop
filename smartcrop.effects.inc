@@ -29,3 +29,60 @@ function smartcrop_image_effect_info() {
   return $effects;
 }
 
+/**
+ * Image effect callback; Scale and Smart Crop an image resource.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $data
+ *   An array of attributes to use when performing the scale effect with the
+ *   following items:
+ *   - "width": An integer representing the desired width in pixels.
+ *   - "height": An integer representing the desired height in pixels.
+ *   - "upscale": A Boolean indicating that the image should be upscalled if
+ *     the dimensions are larger than the original image.
+ *
+ * @return
+ *   TRUE on success. FALSE on failure to scale image.
+ */
+function smartcrop_scale_effect(&$image, $data) {
+  dd (func_get_args());`touch /tmp/foo`;
+  // Set sane default values.
+  $data += array(
+    'upscale' => FALSE,
+  );
+
+  // Set impossibly large values if the width and height aren't set.
+  $data['width'] = empty($data['width']) ? PHP_INT_MAX : $data['width'];
+  $data['height'] = empty($data['height']) ? PHP_INT_MAX : $data['height'];
+
+  if (!image_scale($image, $data['width'], $data['height'], $data['upscale'])) {
+    watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['height'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/**
+ * Image effect callback; Smart Crop an image resource.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $data
+ *   An array of attributes to use when performing the resize effect with the
+ *   following items:
+ *   - "width": An integer representing the desired width in pixels.
+ *   - "height": An integer representing the desired height in pixels.
+ *
+ * @return
+ *   TRUE on success. FALSE on failure to resize image.
+ */
+function smartcrop_crop_effect(&$image, $data) {
+  if (!image_resize($image, $data['width'], $data['height'])) {
+    watchdog('image', 'Smart crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['height'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    return FALSE;
+  }
+  return TRUE;
+}
+
+

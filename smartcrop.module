@@ -5,24 +5,6 @@ require_once('imageapi_gd.inc');
 require_once('smartcrop.effects.inc');
 
 /**
- * Implements hook_imagecache_actions().
- */
-function smartcrop_imagecache_actions() {
-  $actions = array();
-  $actions['smartcrop_scale_and_crop'] = array(
-    'name' => 'Scale and Smart Crop',
-    'description' => 'Similar to "Scale And Crop", but preserves the portion of the image with the most entropy.',
-    'file' => 'smartcrop_actions.inc',
-  );
-  $actions['smartcrop_crop'] = array(
-    'name' => 'Smart Crop',
-    'description' => 'Similar to "Crop", but preserves the portion of the image with the most entropy.',
-    'file' => 'smartcrop_actions.inc',
-  );
-  return $actions;
-}
-
-/**
  * Implements hook_theme().
  */
 function smartcrop_theme() {

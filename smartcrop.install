@@ -9,16 +9,12 @@
 /*
  * Implementation of hook_enable().
  */
-/**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
- */
 function smartcrop_enable() {
   cache_clear_all('imagecache_actions', 'cache');
 }
 
 /**
- * Implements hook_disable().
+ * Implementation of hook_disable().
  */
 function smartcrop_disable() {
   cache_clear_all('imagecache_actions', 'cache');

@@ -1,10 +1,10 @@
 <?php
 // $Id$
 
-require_once DRUPAL_ROOT . '/' . 'imageapi_gd.inc';
+require_once('imageapi_gd.inc');
 
 /**
- * Implements hook_imagecache_actions().
+ * Implementation of hook_imagecache_actions().
  */
 function smartcrop_imagecache_actions() {
   $actions = array();
@@ -22,17 +22,17 @@ function smartcrop_imagecache_actions() {
 }
 
 /**
- * Implements hook_theme().
+ * Implementation of hook_theme().
  */
 function smartcrop_theme() {
   $theme = array(
     'smartcrop_scale_and_crop' => array(
       'file' => 'smartcrop_actions.inc',
-      'render element' => array('element' => NULL),
+      'arguments' => array('element' => NULL),
     ),
     'smartcrop_crop' => array(
       'file' => 'smartcrop_actions.inc',
-      'render element' => array('element' => NULL),
+      'arguments' => array('element' => NULL),
     ),
   );
   return $theme;

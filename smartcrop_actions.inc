@@ -17,8 +17,7 @@ function smartcrop_scale_and_crop_form($data = array()) {
 /**
  * Theme a cropped image.
  */
-function theme_smartcrop_scale_and_crop($variables) {
-  $element = $variables['element'];
+function theme_smartcrop_scale_and_crop($element) {
   module_load_include('inc', 'imagecache', 'imagecache_actions');
   return theme_imagecache_scale($element);
 }
@@ -43,8 +42,7 @@ function smartcrop_crop_form($data = array()) {
 /**
  * Theme a cropped image.
  */
-function theme_smartcrop_crop($variables) {
-  $element = $variables['element'];
+function theme_smartcrop_crop($element) {
   module_load_include('inc', 'imagecache', 'imagecache_actions');
   return theme_imagecache_resize($element);
 }

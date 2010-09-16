@@ -1,5 +1,5 @@
 <?php
 // $Id$
 
-require_once('imageapi_gd.inc');
+require_once('image.gd.inc');
 require_once('smartcrop.effects.inc');

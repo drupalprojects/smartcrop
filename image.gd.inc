@@ -19,14 +19,14 @@
  * @param $upscale TRUE if upscaling is allowed.
  * @return TRUE if successful.
  */
-function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
+function image_gd_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
   if ($ratio <= 1 || $upscale) {
-    if (!imageapi_gd_image_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height'])) {
+    if (!image_gd_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height'])) {
       return FALSE;
     }
   }
-  return imageapi_gd_image_smartcrop_crop($image_data, $requested_x, $requested_y);
+  return image_gd_smartcrop_crop($image_data, $requested_x, $requested_y);
 }
 
 /**
@@ -37,7 +37,7 @@ function imageapi_gd_image_smartcrop_scale(&$image_data, $requested_x, $requeste
  * @param int $requested_y
  * @return booleon TRUE if successful
  */
-function imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested_y) {
+function image_gd_smartcrop_crop(&$image_data, $requested_x, $requested_y) {
   $image = $image_data->resource;
   $dx = imagesx($image) - min(imagesx($image), $requested_x);
   $dy = imagesy($image) - min(imagesy($image), $requested_y);
@@ -95,7 +95,7 @@ function imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested
   }
 
   // Finally, crop the image using the coordinates found above.
-  $cropped_image = imageapi_gd_create_tmp($image_data, $right - $left, $bottom - $top);
+  $cropped_image = image_gd_create_tmp($image_data, $right - $left, $bottom - $top);
   imagecopy($cropped_image, $image, 0, 0, $left, $top, $right - $left, $bottom - $top);
   imagedestroy($image_data->resource);
   $image_data->resource = $cropped_image;
@@ -115,7 +115,7 @@ function imageapi_gd_image_smartcrop_crop(&$image_data, $requested_x, $requested
  * @return
  */
 function _smartcrop_gd_entropy_slice($image_data, $x, $y, $width, $height) {
-  $slice = imageapi_gd_create_tmp($image_data, $width, $height);
+  $slice = image_gd_create_tmp($image_data, $width, $height);
   imagecopy($slice, $image_data->resource, 0, 0, $x, $y, $width, $height);
   $entropy = _smartcrop_gd_entropy($slice);
   imagedestroy($slice);

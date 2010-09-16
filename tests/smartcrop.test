@@ -13,7 +13,7 @@ class SmartcropTestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Smartcrop test'),
       'description' => t('Test Smartcrop.'),
-      'group' => t('Imagecache'),
+      'group' => t('Image'),
     );
   }
 

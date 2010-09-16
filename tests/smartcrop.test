@@ -18,14 +18,10 @@ class SmartcropTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('smartcrop', 'imagecache', 'imagecache_ui', 'imageapi', 'imageapi_gd', 'upload');
-
-    // Menu router must be rebuilt because imagecache_menu() is called before $conf['file_directory_path'] is set.
-    // Fix in progress at http://drupal.org/node/654752
-    menu_router_build(TRUE);
+    parent::setUp('image', 'smartcrop');
 
     // Create and login user
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer imagecache', 'administer nodes', 'upload files', 'view uploaded files'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles'));
     $this->drupalLogin($this->admin_user);
   }
 

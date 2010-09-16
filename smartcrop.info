@@ -9,4 +9,5 @@ files[] = imageapi_gd.inc
 files[] = smartcrop.install
 files[] = smartcrop.module
 files[] = smartcrop_actions.inc
+files[] = smartcrop.effects.inc
 files[] = tests/smartcrop.test

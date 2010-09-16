@@ -1,7 +1,8 @@
 <?php
 // $Id$
 
-require_once DRUPAL_ROOT . '/' . 'imageapi_gd.inc';
+require_once('imageapi_gd.inc');
+require_once('smartcrop.effects.inc');
 
 /**
  * Implements hook_imagecache_actions().

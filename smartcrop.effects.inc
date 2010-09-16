@@ -46,7 +46,7 @@ function smartcrop_image_effect_info() {
  *   TRUE on success. FALSE on failure to scale image.
  */
 function smartcrop_scale_effect(&$image, $data) {
-  dd (func_get_args());`touch /tmp/foo`;
+
   // Set sane default values.
   $data += array(
     'upscale' => FALSE,
@@ -56,7 +56,7 @@ function smartcrop_scale_effect(&$image, $data) {
   $data['width'] = empty($data['width']) ? PHP_INT_MAX : $data['width'];
   $data['height'] = empty($data['height']) ? PHP_INT_MAX : $data['height'];
 
-  if (!image_scale($image, $data['width'], $data['height'], $data['upscale'])) {
+  if (!image_toolkit_invoke('smartcrop_scale', $image, $data)) {
     watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['height'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
@@ -78,11 +78,9 @@ function smartcrop_scale_effect(&$image, $data) {
  *   TRUE on success. FALSE on failure to resize image.
  */
 function smartcrop_crop_effect(&$image, $data) {
-  if (!image_resize($image, $data['width'], $data['height'])) {
+  if (!image_toolkit_invoke('smartcrop_crop', $image, $data)) {
     watchdog('image', 'Smart crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['height'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
     return FALSE;
   }
   return TRUE;
 }
-
-

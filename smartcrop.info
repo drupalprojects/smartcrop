@@ -2,9 +2,8 @@
 name = SmartCrop
 description = Crops low-entropy parts of the image.
 core = 7.x
-dependencies[] = imagecache
-dependencies[] = imageapi_gd
-package = ImageCache
+dependencies[] = image
+package = Image
 
 files[] = imageapi_gd.inc
 files[] = smartcrop.install

@@ -6,20 +6,18 @@
  * Install file for smartcrop module
  */
 
-/*
- * Implementation of hook_enable().
- */
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Implements hook_enable().
  */
 function smartcrop_enable() {
-  cache_clear_all('imagecache_actions', 'cache');
+  cache_clear_all('image_styles', 'cache');
+  cache_clear_all('image_effects:', 'cache', TRUE);
 }
 
 /**
  * Implements hook_disable().
  */
 function smartcrop_disable() {
-  cache_clear_all('imagecache_actions', 'cache');
+  cache_clear_all('image_styles', 'cache');
+  cache_clear_all('image_effects:', 'cache', TRUE);
 }

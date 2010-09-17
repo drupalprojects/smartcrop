@@ -174,7 +174,7 @@ class SmartcropTestCase extends ImageFieldTestCase {
     $file = 'quarter.png';
     $edit = array(
       'title' => $this->randomName(),
-      'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
+      'files[smartcrop_image_und_0]' => realpath(dirname(__FILE__) . '/' . $file),
     );
 
     $this->drupalPost('node/add/page', $edit, t('Save'));

@@ -124,31 +124,6 @@ class SmartcropTestCase extends ImageFieldTestCase {
     $actual_image = imagecreatefrompng(image_style_url('test', $image_uri));
     $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
 
-    // Test percentage units.
-    /*
-    $this->drupalGet('admin/build/imagecache');
-    $this->clickLink('test');
-    $this->clickLink('Configure');
-    $edit = array(
-      'data[width]' => '200%',
-      'data[height]' => '200%',
-      'data[upscale]' => 1,
-    );
-    $this->drupalPost(NULL, $edit, t('Update Action'));
-    $file = 'center.png';
-    $edit = array(
-      'title' => $this->randomName(),
-      'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
-    );
-    $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->drupalGet(file_create_url('imagecache/test/center_0.png'));
-    $this->assertResponse(200, t('Retrieved cropped image.'));
-
-    $actual_image = imagecreatefrompng(file_create_url('imagecache/test/center_0.png'));
-    $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center_2X.png');
-    $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
-    */
-
     // Clean up.
     imagedestroy($expected_image);
     imagedestroy($actual_image);

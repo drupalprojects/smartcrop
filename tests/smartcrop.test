@@ -121,7 +121,7 @@ class SmartcropTestCase extends ImageFieldTestCase {
     $this->assertResponse(200, t('Retrieved cropped image.'));
 
     $expected_image = imagecreatefrompng(dirname(__FILE__) . '/center_10X.png');
-    $actual_image = imagecreatefrompng($image_uri);
+    $actual_image = imagecreatefrompng(image_style_url('test', $image_uri));
     $this->assertImageEqual($actual_image, $expected_image, 1, t('@file was upscaled correctly.', array('@file' => $file)));
 
     // Test percentage units.

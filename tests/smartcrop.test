@@ -164,17 +164,18 @@ class SmartcropTestCase extends ImageFieldTestCase {
       'data[height]' => '10',
     );
     $this->drupalPost(NULL, $edit, t('Add effect'));
-    $file = 'quarter.png';
-    $edit = array(
-      'title' => $this->randomName(),
-      'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
-    );
 
     // Create an image field that uses the new style.
     $instance = $this->createImageField('smartcrop_image', 'page');
     $instance['display']['default']['type'] = 'image';
     $instance['display']['default']['settings']['image_style'] = 'test2';
     field_update_instance($instance);
+
+    $file = 'quarter.png';
+    $edit = array(
+      'title' => $this->randomName(),
+      'files[upload]' => realpath(dirname(__FILE__) . '/' . $file),
+    );
 
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title']);

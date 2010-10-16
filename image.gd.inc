@@ -22,7 +22,7 @@
 function image_gd_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
   if ($ratio <= 1 || $upscale) {
-    if (!image_gd_resize($image_data, $ratio * $image_data->info['width'], $ratio * $image_data->info['height'])) {
+    if (!image_gd_resize($image_data, round($ratio * $image_data->info['width']), round($ratio * $image_data->info['height']))) {
       return FALSE;
     }
   }

@@ -19,7 +19,7 @@
  * @param $upscale TRUE if upscaling is allowed.
  * @return TRUE if successful.
  */
-function image_gd_smartcrop_scale(&$image_data, $requested_x, $requested_y, $upscale) {
+function image_gd_smartcrop_scale(stdClass $image_data, $requested_x, $requested_y, $upscale) {
   $ratio = max($requested_x / $image_data->info['width'], $requested_y / $image_data->info['height']);
   if ($ratio <= 1 || $upscale) {
     if (!image_gd_resize($image_data, round($ratio * $image_data->info['width']), round($ratio * $image_data->info['height']))) {
@@ -37,7 +37,7 @@ function image_gd_smartcrop_scale(&$image_data, $requested_x, $requested_y, $ups
  * @param int $requested_y
  * @return booleon TRUE if successful
  */
-function image_gd_smartcrop_crop(&$image_data, $requested_x, $requested_y) {
+function image_gd_smartcrop_crop(stdClass $image_data, $requested_x, $requested_y) {
   $image = $image_data->resource;
   $dx = imagesx($image) - min(imagesx($image), $requested_x);
   $dy = imagesy($image) - min(imagesy($image), $requested_y);

@@ -1,4 +1,3 @@
-; // $Id$
 name = SmartCrop
 description = Crops low-entropy parts of the image.
 core = 7.x
